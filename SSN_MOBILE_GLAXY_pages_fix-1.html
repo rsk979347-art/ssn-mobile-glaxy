@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSN MOBILE GLAXY</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(220, 38, 38, 0.14);
+        }
+        #phone-grid { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:12px !important; align-items:start; }
+        #phone-grid > * { min-width:0; }
+        #ssn-splash { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:linear-gradient(145deg,#fff 0%,#fff5f5 55%,#fee2e2 100%); transition:opacity .45s ease, visibility .45s ease; }
+        #ssn-splash.splash-hide { opacity:0; visibility:hidden; pointer-events:none; }
+        .ssn-splash-logo { width:104px; height:104px; border-radius:28px; object-fit:cover; border:3px solid #fff; box-shadow:0 12px 35px rgba(220,38,38,.2); animation:ssnLogoPop .8s cubic-bezier(.2,.8,.2,1) both; }
+        .ssn-splash-ring { position:absolute; width:132px; height:132px; border:2px solid rgba(220,38,38,.22); border-top-color:#dc2626; border-radius:34px; animation:ssnSpin 1.4s linear infinite; }
+        .ssn-splash-title { animation:ssnTextIn .7s .15s both; }
+        @keyframes ssnSpin { to { transform:rotate(360deg); } }
+        @keyframes ssnLogoPop { 0% { transform:scale(.72); opacity:0; } 100% { transform:scale(1); opacity:1; } }
+        @keyframes ssnTextIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        @media (prefers-reduced-motion:reduce) { #ssn-splash *, #ssn-splash { animation:none!important; transition:none!important; } }
+    
+
+        /* Premium, subtle vertical scrolling */
+        html { scroll-behavior:smooth; scrollbar-gutter:stable; }
+        body {
+            overflow-y:auto;
+            -webkit-overflow-scrolling:touch;
+            overscroll-behavior-y:contain;
+            scroll-padding-top:16px;
+        }
+        body, * {
+            scrollbar-width:thin;
+            scrollbar-color:rgba(220,38,38,.42) rgba(148,163,184,.10);
+        }
+        *::-webkit-scrollbar { width:7px; height:7px; }
+        *::-webkit-scrollbar-track {
+            background:rgba(148,163,184,.10);
+            border-radius:999px;
+        }
+        *::-webkit-scrollbar-thumb {
+            background:linear-gradient(180deg,rgba(248,113,113,.72),rgba(185,28,28,.62));
+            border:2px solid transparent;
+            background-clip:padding-box;
+            border-radius:999px;
+        }
+        *::-webkit-scrollbar-thumb:hover {
+            background:linear-gradient(180deg,#f87171,#b91c1c);
+            border:1px solid transparent;
+            background-clip:padding-box;
+        }
+        @media (max-width:700px) {
+            html { scrollbar-gutter:auto; }
+            *::-webkit-scrollbar { width:3px; height:3px; }
+            *::-webkit-scrollbar-thumb { border-width:0; }
+        }
+
+        /* Hide horizontal scrollbars without disabling swipe/scroll */
+        .overflow-x-auto, .overflow-x-scroll, [style*="overflow-x: auto"], [style*="overflow-x:auto"] {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+        .overflow-x-auto::-webkit-scrollbar, .overflow-x-scroll::-webkit-scrollbar,
+        [style*="overflow-x: auto"]::-webkit-scrollbar, [style*="overflow-x:auto"]::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        /* iPhone-inspired glass UI */
+        :root { --glass-border: rgba(255,255,255,.72); }
+        body { background: radial-gradient(circle at 12% 0%, #fff1f2 0, transparent 34%), linear-gradient(180deg,#f8fafc 0%,#fff 55%,#fff5f5 100%) !important; }
+        .glass-card, .glass-panel, .modal-content {
+            background: rgba(255,255,255,.68) !important;
+            border: 1px solid rgba(255,255,255,.9) !important;
+            box-shadow: 0 8px 28px rgba(31,41,55,.08), inset 0 1px 0 rgba(255,255,255,.95) !important;
+            backdrop-filter: blur(18px) saturate(1.35);
+            -webkit-backdrop-filter: blur(18px) saturate(1.35);
+        }
+        button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+        #phone-grid { gap: 14px !important; }
+        #phone-grid > * { border-radius: 22px !important; overflow:hidden; }
+        #phone-grid img { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+        #phone-grid > *:active img { transform: scale(.97); }
+        .overflow-x-auto, .overflow-x-scroll, [style*="overflow-x: auto"], [style*="overflow-x:auto"] {
+            scroll-behavior:smooth !important;
+            -webkit-overflow-scrolling:touch !important;
+            overscroll-behavior-x:contain;
+            scrollbar-width:none !important;
+        }
+        .overflow-x-auto::-webkit-scrollbar, .overflow-x-scroll::-webkit-scrollbar,
+        [style*="overflow-x: auto"]::-webkit-scrollbar, [style*="overflow-x:auto"]::-webkit-scrollbar {
+            display:none !important; width:0 !important; height:0 !important;
+        }
+        #phone-photo-track { scroll-behavior:smooth !important; -webkit-overflow-scrolling:touch !important; touch-action:pan-x pinch-zoom; }
+        .ssn-glass-surface {
+            background:rgba(255,255,255,.62) !important;
+            border:1px solid rgba(255,255,255,.85) !important;
+            box-shadow:0 10px 30px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.9) !important;
+            backdrop-filter:blur(20px) saturate(1.4);
+            -webkit-backdrop-filter:blur(20px) saturate(1.4);
+        }
+        @media (prefers-reduced-motion:reduce) {
+            .overflow-x-auto, .overflow-x-scroll, #phone-photo-track { scroll-behavior:auto !important; }
+            #phone-grid img { transition:none !important; }
+        }
+ 
+        .phone-detail-photo-strip { scroll-behavior:smooth !important; -webkit-overflow-scrolling:touch !important; overscroll-behavior-x:contain; scrollbar-width:none !important; }
+        .phone-detail-photo-strip::-webkit-scrollbar { display:none !important; }
+        .phone-viewer-image { touch-action:pan-x pan-y pinch-zoom; user-select:none; -webkit-user-drag:none; transform-origin:center center; }
+        #phone-photo-track > div { overflow:auto; }
+
+        /* Refined app motion and responsive touch feedback */
+        :root { color-scheme: light; }
+        body { text-rendering: optimizeLegibility; }
+        button, a, input, select, textarea {
+            transition: background-color .18s ease, border-color .18s ease,
+                        box-shadow .18s ease, opacity .18s ease, transform .18s ease;
+        }
+        button:active { transform: scale(.985); }
+        button:focus-visible, a:focus-visible, input:focus-visible,
+        select:focus-visible, textarea:focus-visible {
+            outline: 2px solid rgba(220,38,38,.65);
+            outline-offset: 2px;
+        }
+        #phone-grid > * {
+            transition: transform .22s ease, box-shadow .22s ease;
+            contain: layout paint;
+        }
+        #phone-grid > *:active { transform: scale(.985); }
+        img { image-rendering:auto; }
+        .modal-content { will-change: transform, opacity; }
+        @media (hover:hover) and (pointer:fine) {
+            #phone-grid > *:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 28px rgba(15,23,42,.10);
+            }
+        }
+        @media (prefers-reduced-motion:reduce) {
+            *, *::before, *::after {
+                scroll-behavior:auto !important;
+                animation-duration:.01ms !important;
+                animation-iteration-count:1 !important;
+                transition-duration:.01ms !important;
+            }
+        }
+
+
+        /* Compact, responsive booking sheet */
+        #booking-modal { box-sizing:border-box; padding:12px; }
+        #booking-modal .booking-sheet {
+            box-sizing:border-box;
+            width:min(100%, 540px);
+            max-width:540px;
+            max-height: min(90dvh, 820px);
+            margin:auto;
+            padding:clamp(16px, 4vw, 24px);
+            border:1px solid rgba(248,113,113,.22);
+            border-radius:24px;
+            background:rgba(255,255,255,.98);
+            box-shadow:0 24px 70px rgba(15,23,42,.24);
+            overscroll-behavior:contain;
+            -webkit-overflow-scrolling:touch;
+        }
+        #booking-modal h3 { font-size:clamp(20px, 4.8vw, 26px); line-height:1.2; padding-right:38px; }
+        #booking-modal #booking-phone-title { font-size:14px; line-height:1.4; overflow-wrap:anywhere; }
+        #booking-modal label { font-size:13px; font-weight:600; }
+        #booking-modal input:not([type=file]), #booking-modal textarea {
+            box-sizing:border-box; width:100%; min-width:0; max-width:100%;
+            min-height:46px; padding:12px 14px; border-radius:14px;
+            font-size:16px; line-height:1.35;
+        }
+        #booking-modal textarea { min-height:76px; }
+        #booking-modal button { min-height:44px; }
+        #booking-modal form { min-width:0; }
+        @media(max-width:480px) {
+            #booking-modal { align-items:flex-end; padding:8px; }
+            #booking-modal .booking-sheet { width:100%; max-height:92dvh; border-radius:22px 22px 14px 14px; }
+        }
+\n 
+        #phone-photo-track .phone-viewer-image {
+            display:block !important;
+            width:auto !important;
+            height:auto !important;
+            max-width:100vw !important;
+            max-height:100dvh !important;
+            object-fit:contain !important;
+            object-position:center center !important;
+            transform:none !important;
+            scale:1 !important;
+        }
+\n</style>
+</head>
+<body class="bg-white text-slate-900 min-h-screen flex flex-col font-sans">
+    <div id="ssn-splash" role="status" aria-label="SSN MOBILE GLAXY loading">
+        <div class="flex flex-col items-center text-center px-6">
+            <div class="relative flex items-center justify-center w-36 h-36 mb-6">
+                <div class="ssn-splash-ring"></div>
+                <img id="ssn-splash-logo" class="ssn-splash-logo" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=240&q=85" alt="Store logo">
+            </div>
+            <h1 id="ssn-splash-name" class="ssn-splash-title text-2xl font-black tracking-wide text-slate-900">SSN MOBILE GLAXY</h1>
+            <p class="ssn-splash-title text-xs tracking-[.28em] font-bold text-red-600 mt-2">WELCOME</p>
+            <div class="w-32 h-1.5 bg-red-100 rounded-full overflow-hidden mt-7">
+                <div class="h-full bg-red-600 rounded-full" style="width:45%;animation:ssnLoad 1.35s ease-in-out infinite alternate"></div>
+            </div>
+        </div>
+    </div>
+    <style>@keyframes ssnLoad { from { width:12%; } to { width:100%; } }</style>
+
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-red-100">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <!-- Store Logo & Name -->
+            <div class="flex items-center gap-3">
+                <img id="store-logo-img" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=100&q=80" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-red-200">
+                <div>
+                    <h1 id="store-name-text" class="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+                        SSN MOBILE GLAXY
+                    </h1>
+                    <p id="store-location-text" class="text-xs text-slate-600"></p>
+                </div>
+            </div>
+
+            <!-- Right Nav Actions -->
+            <div class="flex items-center gap-3">
+                <!-- User Profile / Auth Status -->
+                <div id="auth-status-container" class="flex items-center gap-2"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Small corner Settings icon: opens protected Admin area after PIN -->
+    <button id="admin-side-tab" onclick="adminAccess()" aria-label="Settings" title="Settings"
+        class="fixed top-3 right-3 z-50 bg-red-600 hover:bg-red-700 text-white border border-red-700 rounded-full shadow-md flex items-center justify-center"
+        style="width:32px;height:32px;font-size:17px;line-height:1;">
+        ⚙
+    </button>
+
+
+    <div id="admin-pin-modal" class="hidden fixed inset-0 z-[110] bg-slate-900/50 backdrop-blur-sm items-center justify-center p-5">
+        <form onsubmit="submitAdminPin(event)" class="w-full max-w-sm rounded-3xl bg-white border border-red-100 shadow-2xl p-6">
+            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600 text-2xl">⚙</div>
+            <h2 class="text-xl font-bold text-center text-slate-900">Admin Access</h2>
+            <p class="text-sm text-center text-slate-500 mt-1 mb-5">Enter your Admin Panel PIN to continue</p>
+            <input id="admin-pin-entry" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" required placeholder="Enter Admin PIN" class="w-full rounded-xl border border-red-200 bg-white px-4 py-3 text-center text-lg tracking-[0.3em] text-slate-900 outline-none focus:border-red-600">
+            <div class="grid grid-cols-2 gap-3 mt-5">
+                <button type="button" onclick="closeAdminPinModal()" class="rounded-xl border border-slate-200 py-3 font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
+                <button type="submit" class="rounded-xl bg-red-600 py-3 font-semibold text-white hover:bg-red-700">Continue</button>
+            </div>
+        </form>
+    </div>
+    </div>
+
+    <div id="rename-condition-modal" class="hidden fixed inset-0 z-[125] bg-slate-950/60 backdrop-blur-md items-center justify-center p-4">
+        <div class="w-full max-w-sm rounded-3xl bg-white border border-red-100 shadow-2xl p-5 sm:p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-11 h-11 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center text-xl">✎</div>
+                <div class="min-w-0">
+                    <h3 class="text-lg font-bold text-slate-900">Rename Condition</h3>
+                    <p class="text-xs text-slate-500">নতুন নামটি লিখুন</p>
+                </div>
+            </div>
+            <label for="rename-condition-input" class="block text-xs font-semibold text-slate-600 mb-2">Condition name</label>
+            <input id="rename-condition-input" maxlength="35" autocomplete="off" placeholder="যেমন: 7 Months Used"
+                class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base text-slate-900 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100">
+            <div class="flex gap-2 mt-5">
+                <button type="button" onclick="closeRenameCondition()" class="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-600">Cancel</button>
+                <button type="button" onclick="saveRenameCondition()" class="flex-1 rounded-2xl bg-red-600 px-4 py-3 font-semibold text-white shadow-lg shadow-red-200">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-condition-modal" class="hidden fixed inset-0 z-[120] bg-slate-900/50 backdrop-blur-sm items-center justify-center p-4">
+        <div class="w-full max-w-sm rounded-2xl bg-white border border-red-100 shadow-2xl p-5">
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Delete Condition</h3>
+            <p id="delete-condition-message" class="text-sm text-slate-600 mb-3"></p>
+            <div id="move-condition-wrap" class="hidden">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Move these phones to</label>
+                <select id="move-condition-target" class="w-full rounded-xl border border-red-200 bg-white p-3 text-sm text-slate-900"></select>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-5">
+                <button type="button" onclick="closeDeleteConditionModal()" class="rounded-xl border border-slate-200 py-3 font-semibold text-slate-600">Cancel</button>
+                <button type="button" onclick="confirmDeletePhoneCondition()" class="rounded-xl bg-red-600 py-3 font-semibold text-white">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="phone-details-modal" class="hidden fixed inset-0 z-[105] bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4">
+        <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
+            <div class="sticky top-0 z-10 flex items-center justify-between border-b border-red-100 bg-white px-5 py-4">
+                <h2 class="text-lg font-extrabold text-slate-900">Phone Details</h2>
+                <button type="button" onclick="closePhoneDetails()" class="rounded-full bg-slate-100 px-3 py-2 text-slate-700">✕</button>
+            </div>
+            <div id="phone-details-content" class="p-5"></div>
+        </div>
+    </div>
+    <div id="phone-photo-viewer" class="hidden fixed inset-0 z-[130] bg-black flex-col items-center justify-center overflow-hidden" style="height:100vh;height:100dvh;">
+        <button type="button" aria-label="Close photo" class="absolute top-4 right-4 z-10 h-11 w-11 rounded-full bg-black/55 border border-white/30 text-white text-2xl backdrop-blur-md" onclick="closePhonePhotoViewer()">✕</button>
+        <div id="phone-photo-track" class="flex w-full h-full min-h-0 overflow-x-auto snap-x snap-mandatory scroll-smooth items-center" style="scrollbar-width:none;touch-action:pan-x pinch-zoom;">
+        </div>
+    </div>
+
+    <div id="app-toast" role="status" aria-live="polite"
+         class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] hidden w-[calc(100%-2rem)] max-w-md rounded-2xl border border-red-100 bg-white px-4 py-3 shadow-2xl">
+        <div class="flex items-start gap-3">
+            <div id="app-toast-icon" class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600">✓</div>
+            <div class="min-w-0 flex-1">
+                <p id="app-toast-title" class="font-semibold text-slate-900 text-sm">SSN MOBILE GLAXY</p>
+                <p id="app-toast-message" class="mt-1 text-sm text-slate-600"></p>
+            </div>
+            <button onclick="hideToast()" class="text-slate-400 hover:text-slate-700" aria-label="Close notification">✕</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        
+        <!-- Navigation Tabs (Storefront vs Admin Dashboard) -->
+        <div class="flex items-center justify-between border-b border-red-100 pb-4 mb-6 gap-4 flex-wrap">
+            <div class="flex items-center gap-2">
+                <button id="tab-storefront-btn" onclick="switchMainTab('storefront')" class="px-4 py-2 rounded-xl text-sm font-semibold transition bg-red-600 text-white shadow-lg shadow-red-600/20 flex items-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Storefront
+                </button>
+                <button id="tab-admin-btn" onclick="adminAccess()" class="hidden" aria-hidden="true" tabindex="-1"></button>
+            </div>
+
+            <!-- Filters / Search (Storefront Mode) -->
+            <div id="storefront-controls" class="flex items-center gap-2 flex-wrap w-full md:w-auto">
+                <div class="relative flex-1 md:w-64">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                    <input type="text" id="search-input" oninput="renderStorefront()" placeholder="Search phones..." class="w-full bg-white border border-red-100 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-red-600">
+                </div>
+                <div class="relative w-full sm:w-auto">
+                    <select id="condition-filter" class="hidden" onchange="renderStorefront()" class="w-full sm:min-w-[190px] bg-white border border-red-200 rounded-xl py-3 px-4 text-base font-medium text-slate-800 focus:outline-none focus:border-red-600">
+                        <option value="ALL">All Condition</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brand quick filters below condition filter -->
+        <div class="mb-5">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-bold text-slate-800">Shop by Brand</h3>
+                <span class="text-xs text-slate-500">Choose a brand</span>
+            </div>
+            <div id="brand-filter-list" class="flex gap-2 overflow-x-auto pb-2" style="scrollbar-width:thin;">
+                <button type="button" onclick="chooseBrand('ALL', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white">All</button>
+                <button type="button" onclick="chooseBrand('Samsung', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">Samsung</button>
+                <button type="button" onclick="chooseBrand('Apple', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">iPhone</button>
+                <button type="button" onclick="chooseBrand('Nothing', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">Nothing</button>
+                <button type="button" onclick="chooseBrand('OnePlus', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">OnePlus</button>
+                <button type="button" onclick="chooseBrand('Xiaomi', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">Xiaomi</button>
+                <button type="button" onclick="chooseBrand('Realme', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">Realme</button>
+                <button type="button" onclick="chooseBrand('Vivo', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">Vivo</button>
+                <button type="button" onclick="chooseBrand('Oppo', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">Oppo</button>
+                <button type="button" onclick="chooseBrand('More', this)" class="brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700">More</button>
+            </div>
+        </div>
+
+        <!-- VIEW 1: Storefront Section -->
+        <section id="view-storefront">
+            <div id="phone-grid" class="grid grid-cols-2 gap-3">
+                <!-- Phone Cards Rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- VIEW 2: Admin Dashboard Section -->
+        <section id="view-admin" class="hidden space-y-8">
+            <!-- Admin Top Banner -->
+            <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-red-600/20 text-red-600 rounded-xl border border-red-200">
+                        <i data-lucide="user-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Logged in as: <span id="admin-current-name" class="text-red-600">Admin</span></h2>
+                        <p class="text-xs text-slate-600">Aapni ar aapnar partner admin inventory manage o settings update korte parben.</p>
+                    </div>
+                </div>
+                <button onclick="openStoreSettingsModal()" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-slate-800 rounded-xl text-sm font-semibold flex items-center gap-2 border border-red-200">
+                    <i data-lucide="settings" class="w-4 h-4"></i> Store Settings
+                </button>
+            </div>
+
+            <!-- Add New Phone Form -->
+            <div class="glass-card p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-red-600"></i> Add New Phone Listing
+                </h3>
+                <form id="add-phone-form" onsubmit="handleAddPhone(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Model Name</label>
+                        <input type="text" id="add-title" required placeholder="E.g. iPhone 13 Pro" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Brand</label>
+                        <select id="add-brand" onchange="toggleCustomBrand()" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                            <option value="Apple">Apple</option>
+                            <option value="Samsung">Samsung</option>
+                            <option value="OnePlus">OnePlus</option>
+                            <option value="Xiaomi">Xiaomi</option>
+                            <option value="Realme">Realme</option>
+                            <option value="Vivo">Vivo</option>
+                            <option value="Oppo">Oppo</option>
+                            <option value="iQOO">iQOO</option>
+                            <option value="Motorola">Motorola</option>
+                            <option value="Google">Google</option>
+                            <option value="Nothing">Nothing</option>
+                            <option value="Poco">Poco</option>
+                            <option value="Infinix">Infinix</option>
+                            <option value="Tecno">Tecno</option>
+                            <option value="Other">Custom Brand</option>
+                        </select>
+                        <input type="text" id="add-custom-brand" maxlength="40" placeholder="Enter your brand name" class="hidden mt-2 w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Condition</label>
+                        <input type="text" id="add-condition" maxlength="60" placeholder="নিজের মতো Condition লিখুন" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Use</label>
+                        <input type="text" id="add-use" maxlength="60" placeholder="Use সম্পর্কে লিখুন (ঐচ্ছিক)" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Price (₹)</label>
+                        <input type="number" id="add-price" required placeholder="E.g. 45000" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Offer Price (₹) — optional</label>
+                        <input type="number" id="add-offer-price" min="0" placeholder="Special offer price" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Stock Quantity (কতটি আছে?)</label>
+                        <input type="number" id="add-stock" min="0" step="1" value="1" required placeholder="E.g. 5" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">RAM / Storage</label>
+                        <input type="text" id="add-specs" required placeholder="E.g. 8GB / 128GB" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Battery Health / Condition Info</label>
+                        <input type="text" id="add-battery" placeholder="E.g. 88% Battery / Mint" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-3">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Photo (Upload from Gallery)</label>
+                        <input type="file" id="add-image-file" accept="image/*" multiple class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                        <p class="text-xs text-slate-500 mt-1">Choose a photo from your phone Gallery or take a new photo.</p>
+                        <img id="add-image-preview" alt="Selected phone preview" class="hidden mt-3 w-32 h-32 rounded-xl object-cover border border-red-200">
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-3">
+                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-slate-900 font-semibold py-3 rounded-xl shadow-lg shadow-red-600/20 transition flex items-center justify-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Add Phone Listing
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Manage Active Listings -->
+            <div class="glass-card p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Manage Active Store Inventory</h3>
+                <div id="admin-inventory-list" class="space-y-3">
+                    <!-- Inventory Items Rendered via JS -->
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Online Booking Requests</h3>
+                <div id="admin-bookings-list" class="space-y-3">
+                    <p class="text-sm text-slate-500">No booking requests yet.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Auth Modal (Login / Signup) -->
+    <div id="auth-modal" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card p-6 sm:p-8 rounded-2xl w-full max-w-md relative">
+            <button onclick="closeAuthModal()" class="absolute right-4 top-4 text-slate-600 hover:text-slate-900">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center mb-6">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-900">Account-e Login Korun</h3>
+                <p id="modal-subtitle" class="text-xs text-slate-600 mt-1">Aapnar credentials enter করুন</p>
+            </div>
+            
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div id="auth-field-name" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
+                    <input type="text" id="auth-name" placeholder="E.g. Rahul Das" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm text-slate-900 focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">User ID / Email</label>
+                    <input type="text" id="auth-id" required placeholder="User / Admin Name" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm text-slate-900 focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Role</label>
+                    <select id="auth-role" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm text-slate-900 focus:outline-none focus:border-red-600">
+                        <option value="customer">Customer / Buyer</option>
+                        <option value="admin">Store Admin / Seller</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Password / PIN (Admin PIN)</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm text-slate-900 focus:outline-none focus:border-red-600">
+                </div>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-slate-900 font-semibold py-2.5 rounded-xl shadow-lg shadow-red-600/20 transition">
+                    Continue
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Store Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card p-6 rounded-2xl w-full max-w-md relative">
+            <button onclick="closeSettingsModal()" class="absolute right-4 top-4 text-slate-600 hover:text-slate-900">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Update Store Settings</h3>
+            <form onsubmit="handleSaveSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Store Name</label>
+                    <input type="text" id="setting-store-name" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Store Location / Address</label>
+                    <input type="text" id="setting-store-location" placeholder="আপনার দোকানের ঠিকানা লিখুন" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                </div>
+                <div class="rounded-xl border border-red-100 bg-red-50 p-3">
+                    <label class="block text-xs font-semibold text-slate-700 mb-2">Change Store Logo</label>
+                    <div class="flex items-center gap-3">
+                        <img id="setting-logo-preview" alt="Logo preview" class="w-14 h-14 rounded-xl object-cover border border-red-200 bg-white">
+                        <div class="flex-1 min-w-0">
+                            <input type="file" id="setting-store-logo" accept="image/*" onchange="previewStoreLogo(event)" class="block w-full text-xs text-slate-600 file:mr-2 file:rounded-lg file:border-0 file:bg-red-600 file:px-3 file:py-2 file:text-white">
+                            <p class="text-xs text-slate-500 mt-2">Gallery থেকে নতুন Logo বেছে নিন।</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">WhatsApp Order Number (with Country Code)</label>
+                    <input type="text" id="setting-store-phone" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">UPI ID (Admin only)</label>
+                    <input type="text" id="setting-store-upi" placeholder="example@upi" class="w-full bg-white border border-red-100 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    <p class="text-xs text-slate-500 mt-1">Customer pays ₹1,000 advance here. Remaining amount is paid at the shop.</p>
+                </div>
+                <div class="rounded-xl border border-red-200 bg-red-50 p-3">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Change Admin Panel PIN (Admin only)</label>
+                    <input type="password" id="setting-new-admin-pin" inputmode="numeric" minlength="4" maxlength="12" pattern="[0-9]{4,12}" placeholder="New PIN (4–12 digits)" class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm focus:outline-none focus:border-red-600">
+                    <p class="text-xs text-slate-600 mt-1">খালি রাখলে আগের PIN থাকবে। নতুন PIN ৪–১২ সংখ্যার হতে হবে।</p>
+                </div>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-slate-900 font-semibold py-2.5 rounded-xl transition">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Phone Details Modal -->
+    <div id="phone-details-modal" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card p-6 rounded-2xl w-full max-w-md relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closePhoneDetails()" class="absolute right-4 top-4 text-slate-600 hover:text-slate-900" aria-label="Close"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Phone Details</h3>
+            <div id="phone-details-content" class="space-y-3"></div>
+        </div>
+    </div>
+
+    <!-- Edit Phone Modal -->
+    <div id="edit-phone-modal" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card p-6 rounded-2xl w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeEditPhone()" class="absolute right-4 top-4 text-slate-600 hover:text-slate-900" aria-label="Close"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Edit Phone Listing</h3>
+            <form id="edit-phone-form" onsubmit="savePhoneEdit(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input type="hidden" id="edit-phone-id">
+                <div class="sm:col-span-2"><label class="block text-xs text-slate-600 mb-1">Phone Model</label><input id="edit-title" required class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <div><label class="block text-xs text-slate-600 mb-1">Brand</label><select id="edit-brand" onchange="toggleEditCustomBrand()" class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"><option>Apple</option><option>Samsung</option><option>OnePlus</option><option>Xiaomi</option><option>Realme</option><option>Vivo</option><option>Oppo</option><option>iQOO</option><option>Motorola</option><option>Google</option><option>Nothing</option><option>Poco</option><option>Infinix</option><option>Tecno</option><option>Other</option></select><input id="edit-custom-brand" maxlength="40" placeholder="Enter custom brand" class="hidden mt-2 w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                
+                <div><label class="block text-xs text-slate-600 mb-1">Condition</label><input id="edit-condition" maxlength="60" placeholder="নিজের মতো Condition লিখুন" class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <div><label class="block text-xs text-slate-600 mb-1">Use</label><input id="edit-use" maxlength="60" placeholder="Use সম্পর্কে লিখুন (ঐচ্ছিক)" class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <div><label class="block text-xs text-slate-600 mb-1">Price (₹)</label><input id="edit-price" type="number" min="0" required class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div> 
+                <div><label class="block text-xs text-slate-600 mb-1">Offer Price (₹) — optional</label><input id="edit-offer-price" type="number" min="0" placeholder="Special offer price" class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <div><label class="block text-xs text-slate-600 mb-1">Stock Quantity (কতটি আছে?)</label><input id="edit-stock" type="number" min="0" step="1" required class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <div><label class="block text-xs text-slate-600 mb-1">RAM / Storage</label><input id="edit-specs" required class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <div class="sm:col-span-2"><label class="block text-xs text-slate-600 mb-1">Battery / Condition Info</label><input id="edit-battery" class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <div class="sm:col-span-2"><label class="block text-xs text-slate-600 mb-1">Change Photo (optional — choose from Gallery)</label><input id="edit-image-file" type="file" accept="image/*" multiple class="w-full bg-white border border-red-200 rounded-xl p-2.5 text-sm text-slate-900"></div>
+                <button type="submit" class="sm:col-span-2 w-full bg-red-600 hover:bg-red-700 text-slate-900 font-semibold py-3 rounded-xl">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Online Booking Modal -->
+    <div id="booking-modal" class="booking-overlay fixed inset-0 bg-slate-950/55 backdrop-blur-sm z-[140] flex items-center justify-center p-3 hidden">
+        <div class="booking-sheet glass-card relative w-full overflow-y-auto">
+            <button onclick="closeBookingModal()" class="absolute right-4 top-4 text-slate-600 hover:text-slate-900" aria-label="Close"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-xl font-bold text-slate-900 mb-1">Book This Phone</h3>
+            <p id="booking-phone-title" class="text-sm text-red-600 mb-4"></p>
+            <form id="booking-form" onsubmit="submitOnlineBooking(event)" class="space-y-3">
+                <input type="hidden" id="booking-phone-id">
+                <div><label class="block text-xs text-slate-600 mb-1">Your Name</label><input id="booking-customer-name" required class="w-full bg-white border border-red-200 rounded-xl p-3 text-sm text-slate-900" placeholder="Enter your name"></div>
+                <div><label class="block text-xs text-slate-600 mb-1">Mobile Number (required)</label><input id="booking-customer-phone" type="tel" inputmode="numeric" pattern="[0-9+ ]{10,15}" required class="w-full bg-white border border-red-200 rounded-xl p-3 text-sm text-slate-900" placeholder="Your contact number"></div>
+                <div><label class="block text-xs text-slate-600 mb-1">Full Address (required)</label><textarea id="booking-customer-address" rows="2" required class="w-full bg-white border border-red-200 rounded-xl p-3 text-sm text-slate-900" placeholder="House / Street, Area, City, PIN Code"></textarea></div>
+                <div><label class="block text-xs text-slate-600 mb-1">Message (optional)</label><textarea id="booking-customer-note" rows="3" class="w-full bg-white border border-red-200 rounded-xl p-3 text-sm text-slate-900" placeholder="Any question or preferred time"></textarea></div>
+                <div class="rounded-2xl border border-red-200 bg-red-50 p-4 space-y-3">
+                    <p class="text-sm font-bold text-slate-900">₹1,000 Advance Payment</p>
+                    <p class="text-xs text-slate-600">Pay ₹1,000 advance using your UPI app. Payment করে এই App-এ ফিরে এলে UTR ও Screenshot দেওয়ার অংশ খুলবে।</p>
+                    <button type="button" id="booking-pay-now-btn" onclick="startAdvancePayment()" class="w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-red-200">Pay ₹1,000 Advance Now</button>
+                    <p id="booking-payment-return-note" class="hidden text-xs font-medium text-emerald-700">App-এ ফিরে এসেছ। UTR ও Payment Screenshot জমা দাও।</p>
+                </div>
+                <div id="booking-payment-proof-section" class="hidden rounded-xl border border-red-200 bg-red-50 p-3 space-y-2">
+                    <p class="text-sm font-bold text-slate-900">Payment Proof</p>
+                    <div>
+                        <label class="block text-xs text-slate-600 mb-1">UPI Transaction ID / UTR (after payment)</label>
+                        <input id="booking-transaction-id" type="text" maxlength="80" class="w-full bg-white border border-red-200 rounded-xl p-3 text-sm text-slate-900" placeholder="Enter UPI transaction ID">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-600 mb-1">Payment Screenshot (optional)</label>
+                        <input id="booking-payment-proof" type="file" accept="image/*" class="hidden" onchange="previewBookingPaymentProof(event)">
+                        <button type="button" onclick="document.getElementById('booking-payment-proof').click()" class="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white hover:bg-red-700">
+                            <span>▧</span> Choose Photo from Gallery
+                        </button>
+                        <p id="booking-payment-proof-name" class="text-xs text-slate-600 mt-2">No photo selected</p>
+                        <img id="booking-payment-proof-preview" alt="Payment screenshot preview" class="hidden mt-2 max-h-40 rounded-xl border border-red-200 object-contain bg-white">
+                        <p class="text-xs text-slate-500">Gallery থেকে payment screenshot নির্বাচন করুন। Admin যাচাই করে Booking Confirm করবেন।</p>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-slate-900 font-semibold py-3 rounded-xl">Submit Booking Request</button>
+            </form>
+            <p class="text-xs text-slate-500 mt-3">Booking করতে ₹1,000 advance UPI payment লাগবে। বাকি টাকা ফোন নেওয়ার সময় দোকানে দেবেন। Payment Admin যাচাই করবেন।</p>
+        </div>
+    </div>
+    <script>
+        function readStoredJSON(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw ? JSON.parse(raw) : fallback;
+            } catch (error) {
+                console.warn('Stored app data could not be read:', key, error);
+                return fallback;
+            }
+        }
+        let toastTimer;
+        let selectedBrandFilter = 'ALL';
+        function showToast(message, type = 'success', title = '') {
+            const box = document.getElementById('app-toast');
+            if (!box) return;
+            const icon = document.getElementById('app-toast-icon');
+            const heading = document.getElementById('app-toast-title');
+            const body = document.getElementById('app-toast-message');
+            const isError = type === 'error';
+            icon.textContent = isError ? '!' : '✓';
+            icon.className = 'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ' +
+                (isError ? 'bg-red-100 text-red-700' : 'bg-green-50 text-green-700');
+            heading.textContent = title || (isError ? 'Please check' : 'SSN MOBILE GLAXY');
+            body.textContent = message;
+            box.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => box.classList.add('hidden'), 3800);
+        }
+        function hideToast() {
+            document.getElementById('app-toast')?.classList.add('hidden');
+        }
+
+        // Initial LocalStorage Setup & Sample Data
+        const defaultPhones = [
+            {
+                id: "p1",
+                title: "iPhone 14 Pro Max",
+                brand: "Apple",
+                condition: "2nd Hand",
+                price: 82000,
+                specs: "128GB / Space Black",
+                battery: "92% Battery Health",
+                image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&q=80",
+                addedBy: "Owner Admin"
+            },
+            {
+                id: "p2",
+                title: "Samsung Galaxy S23 Ultra",
+                brand: "Samsung",
+                condition: "1st Hand",
+                price: 94999,
+                specs: "12GB RAM / 256GB",
+                battery: "Brand New Sealed Box",
+                image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&q=80",
+                addedBy: "Partner Admin"
+            }
+        ];
+
+        let state = {
+            phones: readStoredJSON('pb_phones', defaultPhones) || defaultPhones,
+            storeSettings: readStoredJSON('pb_settings', {
+                name: "SSN MOBILE GLAXY",
+                location: "",
+                phone: "919732765364",
+                upi: "9876543210@paytm"
+            }) || {
+                name: "SSN MOBILE GLAXY", location: "", phone: "919732765364", upi: "9876543210@paytm"
+            },
+            currentUser: null, // Admin enters PIN when opening Admin Panel
+            bookings: readStoredJSON('pb_bookings', []) || [],
+            activeTab: 'storefront'
+        };
+
+        function saveState() {
+            localStorage.setItem('pb_phones', JSON.stringify(state.phones));
+            localStorage.setItem('pb_settings', JSON.stringify(state.storeSettings));
+            localStorage.removeItem('pb_user');
+            localStorage.setItem('pb_bookings', JSON.stringify(state.bookings));
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeader();
+            const splashName = document.getElementById('ssn-splash-name');
+            const splashLogo = document.getElementById('ssn-splash-logo');
+            if (splashName) splashName.textContent = state.storeSettings.name || 'SSN MOBILE GLAXY';
+            if (splashLogo && state.storeSettings.logo) splashLogo.src = state.storeSettings.logo;
+            refreshConditionControls();
+            renderStorefront();
+            renderAdminView();
+            if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+            window.setTimeout(() => document.getElementById('ssn-splash')?.classList.add('splash-hide'), 1750);
+        });
+
+        // Navigation
+        function switchMainTab(tab) {
+            if (tab === 'admin' && (!state.currentUser || state.currentUser.role !== 'admin')) {
+                adminAccess();
+                return;
+            }
+            state.activeTab = tab;
+            const viewStore = document.getElementById('view-storefront');
+            const viewAdmin = document.getElementById('view-admin');
+            const btnStore = document.getElementById('tab-storefront-btn');
+            const btnAdmin = document.getElementById('tab-admin-btn');
+            const controls = document.getElementById('storefront-controls');
+
+            if (tab === 'admin') {
+                viewStore.classList.add('hidden');
+                viewAdmin.classList.remove('hidden');
+                controls.classList.add('hidden');
+                btnAdmin.className = "px-4 py-2 rounded-xl text-sm font-semibold transition bg-red-600 text-white shadow-lg shadow-red-600/20 flex items-center gap-2";
+                btnStore.className = "px-4 py-2 rounded-xl text-sm font-semibold transition bg-red-50 text-slate-700 hover:bg-red-100 flex items-center gap-2";
+            } else {
+                viewAdmin.classList.add('hidden');
+                viewStore.classList.remove('hidden');
+                controls.classList.remove('hidden');
+                btnStore.className = "px-4 py-2 rounded-xl text-sm font-semibold transition bg-red-600 text-white shadow-lg shadow-red-600/20 flex items-center gap-2";
+                btnAdmin.className = "px-4 py-2 rounded-xl text-sm font-semibold transition bg-red-50 text-slate-700 hover:bg-red-100 flex items-center gap-2";
+            }
+        }
+
+        if (!state.storeSettings.adminPin) state.storeSettings.adminPin = '73124578';
+
+        let phoneConditionOptions = JSON.parse(localStorage.getItem('ssn_phone_conditions') || 'null');
+        // Start with a customizable "7 Months Used Only" option; Admin can rename, add or delete it.
+        if (!Array.isArray(phoneConditionOptions) || (
+            phoneConditionOptions.length === 2 &&
+            phoneConditionOptions.includes('1st Hand') &&
+            phoneConditionOptions.includes('2nd Hand')
+        )) {
+            phoneConditionOptions = ['7 Months Used Only'];
+            localStorage.setItem('ssn_phone_conditions', JSON.stringify(phoneConditionOptions));
+        }
+        function openConditionManager() {
+            renderConditionAdminList();
+            const modal = document.getElementById('condition-manager-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeConditionManager() {
+            const modal = document.getElementById('condition-manager-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function persistPhoneConditions() { localStorage.setItem('ssn_phone_conditions', JSON.stringify(phoneConditionOptions)); }
+        function escapeConditionText(value) {
+            return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        }
+        function refreshConditionControls() {
+            [document.getElementById('add-condition'), document.getElementById('edit-condition')].forEach(select => {
+                if (!select) return;
+                const current = select.value;
+                select.innerHTML = `<option value="" disabled>Choose Condition</option>` + phoneConditionOptions.map(name => `<option value="${escapeConditionText(name)}">${escapeConditionText(name)}</option>`).join('');
+                select.value = phoneConditionOptions.includes(current) ? current : (phoneConditionOptions[0] || '');
+            });
+            const filter = document.getElementById('condition-filter');
+            if (filter) {
+                const currentFilter = filter.value || 'ALL';
+                filter.innerHTML = `<option value="ALL">All Condition</option>` +
+                    phoneConditionOptions.map(name => `<option value="${escapeConditionText(name)}">${escapeConditionText(name)}</option>`).join('');
+                filter.value = currentFilter === 'ALL' || phoneConditionOptions.includes(currentFilter) ? currentFilter : 'ALL';
+            }
+            renderConditionAdminList();
+        }
+        function renderConditionAdminList() {
+            const list = document.getElementById('admin-condition-list');
+            if (!list) return;
+            list.innerHTML = phoneConditionOptions.map((name,index) => `<div class="flex items-center gap-2 rounded-xl border border-red-100 bg-white p-2"><span class="flex-1 text-sm font-semibold">${escapeConditionText(name)}</span><button type="button" onclick="renamePhoneCondition(${index})" class="rounded-lg bg-red-50 text-red-700 px-3 py-2 text-xs font-semibold">Rename</button><button type="button" onclick="deletePhoneCondition(${index})" class="rounded-lg bg-slate-100 text-slate-700 px-3 py-2 text-xs font-semibold">Delete</button></div>`).join('');
+        }
+        function addPhoneCondition() {
+            const input = document.getElementById('new-condition-name'), name = input.value.trim();
+            if (!name) return showToast('Condition name লিখুন।','error');
+            if (phoneConditionOptions.some(x => x.toLowerCase() === name.toLowerCase())) return showToast('এই Condition আগে থেকেই আছে।','error');
+            phoneConditionOptions.push(name); input.value=''; persistPhoneConditions(); refreshConditionControls(); showToast('নতুন Condition যোগ হয়েছে।');
+        }
+        let renamingConditionIndex = null;
+        function renamePhoneCondition(index) {
+            if (index < 0 || index >= phoneConditionOptions.length) return;
+            renamingConditionIndex = index;
+            const modal = document.getElementById('rename-condition-modal');
+            document.getElementById('rename-condition-input').value = phoneConditionOptions[index];
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                const field = document.getElementById('rename-condition-input');
+                field.focus();
+                field.select();
+            }, 80);
+        }
+        function closeRenameCondition() {
+            const modal = document.getElementById('rename-condition-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            renamingConditionIndex = null;
+        }
+        function saveRenameCondition() {
+            const index = renamingConditionIndex;
+            if (index === null || !phoneConditionOptions[index]) return closeRenameCondition();
+            const oldName = phoneConditionOptions[index];
+            const name = document.getElementById('rename-condition-input').value.trim();
+            if (!name || phoneConditionOptions.some((x,i)=>i!==index && x.toLowerCase()===name.toLowerCase())) {
+                return showToast('নামটি খালি বা আগে থেকে আছে।', 'error');
+            }
+            phoneConditionOptions[index] = name;
+            state.phones.forEach(phone => { if (phone.condition === oldName) phone.condition = name; });
+            persistPhoneConditions(); saveState(); refreshConditionControls(); renderStorefront(); renderAdminView();
+            closeRenameCondition();
+            showToast('Condition পরিবর্তন হয়েছে।');
+        }
+        document.getElementById('rename-condition-input').addEventListener('keydown', event => {
+            if (event.key === 'Enter') saveRenameCondition();
+            if (event.key === 'Escape') closeRenameCondition();
+        });
+        let pendingDeleteConditionIndex = null;
+
+        function deletePhoneCondition(index) {
+            if (phoneConditionOptions.length <= 1) return showToast('কমপক্ষে একটি Condition রাখতে হবে।', 'error');
+            const name = phoneConditionOptions[index];
+            const assignedPhones = state.phones.filter(phone => phone.condition === name);
+            const alternatives = phoneConditionOptions.filter((_, i) => i !== index);
+            pendingDeleteConditionIndex = index;
+
+            const message = document.getElementById('delete-condition-message');
+            const wrap = document.getElementById('move-condition-wrap');
+            const target = document.getElementById('move-condition-target');
+
+            if (assignedPhones.length) {
+                message.textContent = `"${name}" Condition-এ ${assignedPhones.length}টি ফোন আছে। Delete করার আগে সেগুলো কোন Condition-এ সরাবেন?`;
+                wrap.classList.remove('hidden');
+                target.innerHTML = alternatives.map(option => `<option value="${escapeConditionText(option)}">${escapeConditionText(option)}</option>`).join('');
+            } else {
+                message.textContent = `"${name}" Condition Delete করবেন?`;
+                wrap.classList.add('hidden');
+                target.innerHTML = '';
+            }
+            const modal = document.getElementById('delete-condition-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDeleteConditionModal() {
+            const modal = document.getElementById('delete-condition-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            pendingDeleteConditionIndex = null;
+        }
+
+        function confirmDeletePhoneCondition() {
+            if (pendingDeleteConditionIndex === null) return;
+            const index = pendingDeleteConditionIndex;
+            const name = phoneConditionOptions[index];
+            const assignedPhones = state.phones.filter(phone => phone.condition === name);
+            const target = document.getElementById('move-condition-target').value;
+
+            if (assignedPhones.length) {
+                if (!target || target === name || !phoneConditionOptions.includes(target)) {
+                    return showToast('ফোনগুলো সরানোর জন্য অন্য একটি Condition বেছে নিন।', 'error');
+                }
+                assignedPhones.forEach(phone => {
+                    phone.condition = target;
+                    if (target === '1st Hand') phone.usedMonths = 0;
+                });
+            }
+
+            phoneConditionOptions.splice(index, 1);
+            persistPhoneConditions();
+            saveState();
+            closeDeleteConditionModal();
+            refreshConditionControls();
+            renderStorefront();
+            renderAdminView();
+            showToast(assignedPhones.length
+                ? `${name} Delete হয়েছে; ${assignedPhones.length}টি ফোন ${target}-এ সরানো হয়েছে।`
+                : `${name} Condition Delete হয়েছে।`);
+        }
+
+        // Header: customers browse and book without login; Admin uses a separate PIN.
+        function renderHeader() {
+            const locationText = document.getElementById('store-location-text');
+            if (locationText) {
+                locationText.textContent = state.storeSettings.location || '';
+                locationText.classList.toggle('hidden', !state.storeSettings.location);
+            }
+            const logoImage = document.getElementById('store-logo-img');
+            if (logoImage && state.storeSettings.logo) logoImage.src = state.storeSettings.logo;
+            document.getElementById('auth-status-container').innerHTML = '';
+
+            if (state.currentUser && state.currentUser.role === 'admin') {
+                document.getElementById('admin-current-name').innerText = 'Admin';
+            }
+            if (window.lucide) if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+        }
+
+        function adminAccess() {
+            if (state.currentUser && state.currentUser.role === 'admin') {
+                switchMainTab('admin');
+                return;
+            }
+            const modal = document.getElementById('admin-pin-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => document.getElementById('admin-pin-entry').focus(), 80);
+        }
+
+        function closeAdminPinModal() {
+            const modal = document.getElementById('admin-pin-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('admin-pin-entry').value = '';
+        }
+
+        function submitAdminPin(event) {
+            event.preventDefault();
+            const pin = document.getElementById('admin-pin-entry').value;
+            if (pin !== String(state.storeSettings.adminPin || '73124578')) {
+                showToast('ভুল Admin PIN। আবার চেষ্টা করুন।', 'error', 'Access denied');
+                document.getElementById('admin-pin-entry').value = '';
+                return;
+            }
+            closeAdminPinModal();
+            state.currentUser = { name: 'Admin', role: 'admin' };
+            saveState();
+            renderHeader();
+            switchMainTab('admin');
+        }
+
+function chooseCondition(value, label) {
+            document.getElementById('condition-filter').value = value;
+            document.getElementById('condition-filter-label').textContent = label;
+            document.getElementById('condition-menu').classList.add('hidden');
+            renderStorefront();
+        }
+
+        function chooseBrand(brand, button) {
+            selectedBrandFilter = brand;
+            document.querySelectorAll('.brand-filter-chip').forEach(chip => {
+                chip.className = 'brand-filter-chip shrink-0 rounded-full border border-red-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700';
+            });
+            if (button) button.className = 'brand-filter-chip shrink-0 rounded-full border border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white';
+            renderStorefront();
+        }
+
+        function openPhoneDetails(id) {
+            const phone = state.phones.find(item => item.id === id);
+            if (!phone) return;
+            const photos = (phone.images && phone.images.length ? phone.images : [phone.image]).filter(Boolean);
+            const cleanDetail = value => {
+                const text = String(value ?? '').trim();
+                return /^(nothing(?:\s+not\s+showing)?|not showing|none|null|undefined|—|- )$/i.test(text) ? '' : text;
+            };
+            const rows = [
+                ['Brand', cleanDetail(phone.brand)],
+                ['Model', cleanDetail(phone.title)],
+                ['Condition', cleanDetail(phone.condition)],
+                ['Used', cleanDetail(phone.use) || (phone.usedMonths ? phone.usedMonths + ' months' : '')],
+                ...(getPhoneSellingPrice(phone) < Number(phone.price)
+                    ? [
+                        ['Real Price', '₹' + Number(phone.price).toLocaleString('en-IN')],
+                        ['Offer Price', '₹' + getPhoneSellingPrice(phone).toLocaleString('en-IN')]
+                    ]
+                    : [['Price', '₹' + Number(phone.price || 0).toLocaleString('en-IN')]]),
+                ['Specifications', cleanDetail(phone.specs)],
+                ['Battery / Health', cleanDetail(phone.battery)]
+            ].filter(([label,value]) => value !== '');
+            document.getElementById('phone-details-content').innerHTML = `
+                <div class="flex gap-3 mb-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 phone-detail-photo-strip">
+                    ${photos.map((photo,index) => `<button type="button" onclick="openPhonePhotoViewer(${index})" class="min-w-[78%] sm:min-w-[60%] h-56 shrink-0 snap-center rounded-2xl overflow-hidden bg-slate-100 shadow-sm"><img src="${photo}" alt="Photo ${index+1}" class="block w-full h-full object-cover" loading="lazy"></button>`).join('')}
+                </div>
+                <h3 class="text-xl font-extrabold text-slate-900 mb-3">${phone.title || 'Phone'}</h3>
+                <div class="divide-y divide-slate-100 rounded-xl border border-slate-100">
+                    ${rows.map(([label,value]) => `<div class="flex gap-3 justify-between p-3 text-sm"><span class="text-slate-500">${label}</span><span class="text-right font-semibold ${label === 'Real Price' ? 'text-slate-400 line-through' : (label === 'Offer Price' ? 'text-red-600 text-base' : 'text-slate-900')}">${String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</span></div>`).join('')}
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <button onclick="closePhoneDetails(); openBookingModal('${phone.id}')" class="rounded-xl bg-red-600 py-3 font-bold text-white">Book Now</button>
+                    <button onclick="orderViaWhatsApp('${String(phone.title || '').replace(/'/g, '')}', ${getPhoneSellingPrice(phone)})" class="rounded-xl bg-green-700 py-3 font-bold text-white">WhatsApp</button>
+                </div>`;
+            const modal = document.getElementById('phone-details-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+        }
+        function closePhoneDetails() {
+            const modal = document.getElementById('phone-details-modal');
+            modal.classList.add('hidden'); modal.classList.remove('flex');
+        }
+        let phoneViewerPhotos = [];
+        function openPhonePhotoViewer(index) {
+            const modal = document.getElementById('phone-photo-viewer');
+            const track = document.getElementById('phone-photo-track');
+            phoneViewerPhotos = Array.from(document.querySelectorAll('#phone-details-content img'))
+                .map(img => img.src).filter(Boolean);
+            track.innerHTML = phoneViewerPhotos.map((src, i) =>
+                `<div class="min-w-full h-full shrink-0 snap-center flex items-center justify-center overflow-hidden bg-black">
+                    <img src="${src}" alt="Phone photo ${i+1}" class="phone-viewer-image" style="width:auto;height:auto;max-width:100vw;max-height:100dvh;object-fit:contain;transform:none;touch-action:pan-x pan-y pinch-zoom;">
+                </div>`).join('');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            requestAnimationFrame(() => { track.scrollLeft = Math.max(0, index) * track.clientWidth; });
+        }
+        // Photos open fitted to the screen at their original aspect ratio.
+        function closePhonePhotoViewer() {
+            const modal = document.getElementById('phone-photo-viewer');
+            modal.classList.add('hidden'); modal.classList.remove('flex');
+            document.getElementById('phone-photo-track').innerHTML = '';
+            phoneViewerPhotos = [];
+        }
+
+        function getPhoneSellingPrice(phone) {
+            const offer = Number(phone.offerPrice) || 0;
+            const regular = Number(phone.price) || 0;
+            return offer > 0 && offer < regular ? offer : regular;
+        }
+
+        function renderStorefront() {
+            const grid = document.getElementById('phone-grid');
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const conditionFilter = document.getElementById('condition-filter').value;
+
+            const filtered = state.phones.filter(phone => {
+                const matchesSearch = phone.title.toLowerCase().includes(search) || phone.brand.toLowerCase().includes(search);
+                const matchesCond = conditionFilter === 'ALL' || phone.condition === conditionFilter;
+                const brandText = String(phone.brand || '').toLowerCase();
+                const matchesBrand = selectedBrandFilter === 'ALL' ||
+                    (selectedBrandFilter === 'Apple' && (brandText === 'apple' || brandText.includes('iphone'))) ||
+                    (selectedBrandFilter === 'More' && !['samsung','apple','iphone','nothing','oneplus','xiaomi','realme','vivo','oppo'].includes(brandText)) ||
+                    (selectedBrandFilter !== 'Apple' && selectedBrandFilter !== 'More' && brandText.includes(selectedBrandFilter.toLowerCase()));
+                return matchesSearch && matchesCond && matchesBrand;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">Kono mobile khunje paowa jayni.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(phone => {
+                const photos = (phone.images && phone.images.length ? phone.images : [phone.image]).filter(Boolean);
+                const cover = photos[0] || '';
+                return `
+                <div class="glass-card rounded-2xl overflow-hidden border border-white/80 bg-white/70 shadow-sm cursor-pointer active:scale-[0.99] transition"
+                     role="button" tabindex="0"
+                     onclick="openPhoneDetails('${phone.id}')"
+                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPhoneDetails('${phone.id}')}">
+                    <div class="h-36 sm:h-40 bg-white flex items-center justify-center p-2">
+                        ${cover ? `<img src="${cover}" alt="${phone.title}" class="max-h-full max-w-[150px] w-auto h-auto object-contain" loading="lazy">` : `<span class="text-slate-400 text-sm">No photo</span>`}
+                    </div>
+                    <div class="px-2 pb-3 pt-1 text-center">
+                        <p class="text-sm font-bold text-slate-800 leading-snug line-clamp-2">${phone.title || phone.name || 'Mobile Phone'}</p>
+                        <p class="text-base font-extrabold text-red-600 mt-1">₹${getPhoneSellingPrice(phone).toLocaleString('en-IN')}</p>${getPhoneSellingPrice(phone) < Number(phone.price) ? `<p class="text-xs text-slate-400 line-through">₹${Number(phone.price).toLocaleString('en-IN')}</p><span class="inline-block mt-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-600">OFFER</span>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+            if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+        }
+
+        function renderAdminView() {
+            const list = document.getElementById('admin-inventory-list');
+            if (!state.phones.length) {
+                list.innerHTML = '<p class="text-sm text-slate-500 text-center py-6">No phone listings yet.</p>';
+                return;
+            }
+            list.innerHTML = state.phones.map(phone => `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white/80 rounded-xl border border-red-100 gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <img src="${(phone.images && phone.images[0]) || phone.image}" alt="${phone.title}" class="w-14 h-14 rounded-lg object-cover shrink-0">
+                        <div class="min-w-0">
+                            <h4 class="text-sm font-bold text-slate-900">${phone.title} (${phone.condition})</h4>
+                            <p class="text-xs text-slate-600">₹${Number(phone.price).toLocaleString('en-IN')} • ${phone.specs || ''}</p>
+                            <p class="text-xs font-semibold ${Number(phone.stock ?? 1) > 0 ? 'text-emerald-700' : 'text-red-700'}">Stock: ${Number(phone.stock ?? 1)} pcs</p>
+                            <p class="text-xs text-slate-500">Added by: ${phone.addedBy || 'Admin'} • ${(phone.images || (phone.image ? [phone.image] : [])).length} photo(s)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="showPhoneDetails('${phone.id}')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-red-50 text-slate-800 border border-red-200">Details</button>
+                        <button onclick="openEditPhone('${phone.id}')" class="px-3 py-2 text-xs font-semibold rounded-lg bg-red-600 text-white">Edit</button>
+                        <button onclick="deletePhone('${phone.id}')" class="p-2 text-slate-600 hover:text-rose-400 transition" title="Delete Listing" aria-label="Delete listing">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            renderBookings();
+            if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+        }
+
+        // Actions
+        // Preserve the original uploaded photo: no resizing and no quality compression.
+        function imageFileToDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                if (!file || !file.type.startsWith('image/')) {
+                    reject(new Error('Please choose a valid image file.'));
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Could not open the selected photo.'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const photoInput = document.getElementById('add-image-file');
+            const photoPreview = document.getElementById('add-image-preview');
+
+            photoInput.addEventListener('change', () => {
+                const files = Array.from(photoInput.files || []);
+                if (!files.length) {
+                    photoPreview.classList.add('hidden');
+                    photoPreview.removeAttribute('src');
+                    return;
+                }
+                if (files.some(file => !file.type.startsWith('image/'))) {
+                    showToast('Please select image files only.');
+                    photoInput.value = '';
+                    photoPreview.classList.add('hidden');
+                    return;
+                }
+                photoPreview.src = URL.createObjectURL(files[0]);
+                photoPreview.classList.remove('hidden');
+            });
+        });
+
+        function toggleCustomBrand() {
+            const custom = document.getElementById('add-custom-brand');
+            const isCustom = document.getElementById('add-brand').value === 'Other';
+            custom.classList.toggle('hidden', !isCustom);
+            custom.required = isCustom;
+            if (!isCustom) custom.value = '';
+        }
+
+        function toggleEditCustomBrand() {
+            const custom = document.getElementById('edit-custom-brand');
+            const isCustom = document.getElementById('edit-brand').value === 'Other';
+            custom.classList.toggle('hidden', !isCustom);
+            custom.required = isCustom;
+            if (!isCustom) custom.value = '';
+        }
+
+        function toggleUsedMonths(which) {
+            // Month-used field removed: condition is selected independently.
+        }
+
+        async function handleAddPhone(e) {
+            e.preventDefault();
+            const photoFiles = Array.from(document.getElementById('add-image-file').files || []);
+            if (!photoFiles.length) {
+                showToast('Please choose at least one phone photo from your Gallery.');
+                return;
+            }
+
+            const submitButton = document.querySelector('#add-phone-form button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Adding phone...';
+
+            try {
+                const photos = await Promise.all(photoFiles.map(imageFileToDataUrl));
+                const newPhone = {
+                    id: "p_" + Date.now(),
+                    title: document.getElementById('add-title').value,
+                    brand: document.getElementById('add-brand').value === 'Other'
+                        ? document.getElementById('add-custom-brand').value.trim()
+                        : document.getElementById('add-brand').value,
+                    condition: document.getElementById('add-condition').value.trim(),
+                    use: document.getElementById('add-use').value.trim(),
+                    price: Number(document.getElementById('add-price').value),
+                    offerPrice: Number(document.getElementById('add-offer-price').value) || 0,
+                    stock: Math.max(0, Math.floor(Number(document.getElementById('add-stock').value) || 0)),
+                    specs: document.getElementById('add-specs').value,
+                    battery: document.getElementById('add-battery').value || 'Standard',
+                    image: photos[0],
+                    images: photos,
+                    addedBy: state.currentUser ? state.currentUser.name : 'Store Admin'
+                };
+
+                state.phones.unshift(newPhone);
+                saveState();
+                renderStorefront();
+                renderAdminView();
+                document.getElementById('add-phone-form').reset();
+                toggleCustomBrand();
+                toggleUsedMonths('add');
+                document.getElementById('add-image-preview').classList.add('hidden');
+                document.getElementById('add-image-preview').removeAttribute('src');
+                showToast('Phone listing successfully added!');
+            } catch (error) {
+                showToast(error.name === 'QuotaExceededError'
+                    ? 'Browser storage is full. Please use a smaller photo.'
+                    : (error.message || 'Could not add this phone. Please try another photo.'));
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i data-lucide="plus" class="w-4 h-4"></i> Add Phone Listing';
+                if (window.lucide) if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+            }
+        }
+
+
+        function showPhoneDetails(id) {
+            const phone = state.phones.find(item => item.id === id);
+            if (!phone) return;
+            document.getElementById('phone-details-content').innerHTML = `
+                <div class="grid grid-cols-2 gap-2">${(phone.images && phone.images.length ? phone.images : [phone.image]).filter(Boolean).map(src => `<img src="${src}" alt="${phone.title}" class="w-full h-36 object-cover rounded-xl">`).join('')}</div>
+                <h4 class="text-lg font-bold text-slate-900">${phone.title}</h4>
+                <p class="text-red-600 font-bold text-xl">₹${Number(phone.price).toLocaleString('en-IN')}</p>
+                <p class="text-sm text-slate-700">Brand: ${phone.brand || 'Not specified'}</p>
+                <p class="text-sm text-slate-700">Condition: ${phone.condition}</p>
+                <p class="text-sm font-semibold ${Number(phone.stock ?? 1) > 0 ? 'text-emerald-700' : 'text-red-700'}">Stock: ${Number(phone.stock ?? 1)} pcs ${Number(phone.stock ?? 1) > 0 ? 'Available' : '(Out of Stock)'}</p>
+                <p class="text-sm text-slate-700">RAM / Storage: ${phone.specs || 'Not specified'}</p>
+                <p class="text-sm text-slate-700">Battery / Info: ${phone.battery || 'Not specified'}</p>
+                <p class="text-xs text-slate-500">Added by: ${phone.addedBy || 'Admin'} • ${(phone.images || (phone.image ? [phone.image] : [])).length} photo(s)</p>`;
+            document.getElementById('phone-details-modal').classList.remove('hidden');
+            if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+        }
+
+        function closePhoneDetails() {
+            document.getElementById('phone-details-modal').classList.add('hidden');
+        }
+
+        function openEditPhone(id) {
+            const phone = state.phones.find(item => item.id === id);
+            if (!phone) return;
+            document.getElementById('edit-phone-id').value = phone.id;
+            document.getElementById('edit-title').value = phone.title || '';
+            const knownBrands = ['Apple','Samsung','OnePlus','Xiaomi','Realme','Vivo','Oppo','iQOO','Motorola','Google','Nothing','Poco','Infinix','Tecno'];
+            const isKnownBrand = knownBrands.includes(phone.brand);
+            document.getElementById('edit-brand').value = isKnownBrand ? phone.brand : 'Other';
+            document.getElementById('edit-custom-brand').value = isKnownBrand ? '' : (phone.brand || '');
+            toggleEditCustomBrand();
+            document.getElementById('edit-condition').value = phone.condition || '';
+            document.getElementById('edit-use').value = phone.use || '';
+            document.getElementById('edit-price').value = phone.price || 0;
+            document.getElementById('edit-offer-price').value = phone.offerPrice || '';
+            document.getElementById('edit-stock').value = Number.isFinite(Number(phone.stock)) ? phone.stock : 1;
+            document.getElementById('edit-specs').value = phone.specs || '';
+            document.getElementById('edit-battery').value = phone.battery || '';
+            document.getElementById('edit-image-file').value = '';
+            document.getElementById('edit-phone-modal').classList.remove('hidden');
+            if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+        }
+
+        function closeEditPhone() {
+            document.getElementById('edit-phone-modal').classList.add('hidden');
+        }
+
+        async function savePhoneEdit(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-phone-id').value;
+            const phone = state.phones.find(item => item.id === id);
+            if (!phone) return;
+
+            const saveButton = document.querySelector('#edit-phone-form button[type="submit"]');
+            saveButton.disabled = true;
+            saveButton.textContent = 'Saving...';
+            try {
+                const selectedPhotos = Array.from(document.getElementById('edit-image-file').files || []);
+                if (selectedPhotos.length) {
+                    phone.images = await Promise.all(selectedPhotos.map(imageFileToDataUrl));
+                    phone.image = phone.images[0];
+                } else if (!phone.images || !phone.images.length) {
+                    phone.images = phone.image ? [phone.image] : [];
+                }
+                phone.title = document.getElementById('edit-title').value.trim();
+                phone.brand = document.getElementById('edit-brand').value === 'Other'
+                    ? document.getElementById('edit-custom-brand').value.trim()
+                    : document.getElementById('edit-brand').value;
+                phone.condition = document.getElementById('edit-condition').value;
+                phone.usedMonths = phone.condition === '2nd Hand' ? Number(document.getElementById('edit-used-months').value) : 0;
+                phone.condition = document.getElementById('edit-condition').value.trim();
+            phone.use = document.getElementById('edit-use').value.trim();
+            phone.price = Number(document.getElementById('edit-price').value);
+                phone.offerPrice = Number(document.getElementById('edit-offer-price').value) || 0;
+                phone.stock = Math.max(0, Math.floor(Number(document.getElementById('edit-stock').value) || 0));
+                phone.specs = document.getElementById('edit-specs').value.trim();
+                phone.battery = document.getElementById('edit-battery').value.trim() || 'Standard';
+
+                saveState();
+                renderStorefront();
+                renderAdminView();
+                closeEditPhone();
+                showToast('Phone listing updated successfully!');
+            } catch (error) {
+                showToast(error.name === 'QuotaExceededError'
+                    ? 'Browser storage is full. Please use a smaller photo.'
+                    : (error.message || 'Could not save changes.'));
+            } finally {
+                saveButton.disabled = false;
+                saveButton.textContent = 'Save Changes';
+            }
+        }
+
+        function deletePhone(id) {
+            if (confirm('Aapni ki ei phone listing-ti delete korte chan?')) {
+                state.phones = state.phones.filter(p => p.id !== id);
+                saveState();
+                renderStorefront();
+                renderAdminView();
+            }
+        }
+
+
+        function openBookingModal(phoneId) {
+            const phone = state.phones.find(item => item.id === phoneId);
+            if (!phone) return;
+            document.getElementById('booking-phone-id').value = phone.id;
+            document.getElementById('booking-phone-title').textContent =
+                `${phone.title} — ₹${getPhoneSellingPrice(phone).toLocaleString('en-IN')}${getPhoneSellingPrice(phone) < Number(phone.price) ? ' (Offer Price)' : ''}`;
+            document.getElementById('booking-modal').classList.remove('hidden');
+            if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function previewBookingPaymentProof(event) {
+            const file = event.target.files && event.target.files[0];
+            const name = document.getElementById('booking-payment-proof-name');
+            const preview = document.getElementById('booking-payment-proof-preview');
+            if (!file) {
+                name.textContent = 'No photo selected';
+                preview.classList.add('hidden');
+                preview.removeAttribute('src');
+                return;
+            }
+            if (!file.type.startsWith('image/')) {
+                showToast('Gallery থেকে একটি ছবি নির্বাচন করুন।', 'error');
+                event.target.value = '';
+                name.textContent = 'No photo selected';
+                preview.classList.add('hidden');
+                return;
+            }
+            name.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = () => {
+                preview.src = reader.result;
+                preview.classList.remove('hidden');
+            };
+            reader.onerror = () => showToast('ছবিটি পড়া যায়নি। আবার চেষ্টা করুন।', 'error');
+            reader.readAsDataURL(file);
+        }
+
+        function readPaymentProof(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) return resolve('');
+                if (!file.type.startsWith('image/')) return reject(new Error('Please choose an image file.'));
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Could not read screenshot.'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        let advancePaymentAppOpened = false;
+        let advancePaymentReturnTimer = null;
+        function startAdvancePayment() {
+            const upi = String(state.storeSettings.upi || '').trim();
+            if (!upi || !upi.includes('@')) {
+                showToast('Admin Settings-এ সঠিক UPI ID সেট করুন।', 'error');
+                return;
+            }
+            const phone = state.phones.find(item => item.id === document.getElementById('booking-phone-id').value);
+            const amount = 1000;
+            const note = `Advance booking - ${phone ? phone.title : 'SSN MOBILE GLAXY'}`;
+            const link = `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(state.storeSettings.name || 'SSN MOBILE GLAXY')}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+            advancePaymentAppOpened = true;
+            document.getElementById('booking-pay-now-btn').textContent = 'Opening UPI App…';
+            window.location.href = link;
+            clearTimeout(advancePaymentReturnTimer);
+            advancePaymentReturnTimer = setTimeout(() => {
+                if (document.visibilityState === 'visible' && advancePaymentAppOpened) {
+                    document.getElementById('booking-pay-now-btn').textContent = 'UPI App খুলে Payment করুন';
+                }
+            }, 1800);
+        }
+        function showBookingPaymentProof() {
+            const section = document.getElementById('booking-payment-proof-section');
+            if (!section || section.classList.contains('hidden') === false) return;
+            section.classList.remove('hidden');
+            document.getElementById('booking-payment-return-note').classList.remove('hidden');
+            section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && advancePaymentAppOpened) {
+                advancePaymentAppOpened = false;
+                showBookingPaymentProof();
+            }
+        });
+        window.addEventListener('pageshow', () => {
+            if (advancePaymentAppOpened) {
+                advancePaymentAppOpened = false;
+                showBookingPaymentProof();
+            }
+        });
+
+        async function submitOnlineBooking(e) {
+            e.preventDefault();
+            if (document.getElementById('booking-payment-proof-section').classList.contains('hidden')) {
+                showToast('আগে ₹1,000 payment সম্পূর্ণ করে “I have completed payment” চাপুন।', 'error');
+                return;
+            }
+            const phone = state.phones.find(item => item.id === document.getElementById('booking-phone-id').value);
+            if (!phone) {
+                showToast('This phone listing is no longer available.');
+                closeBookingModal();
+                return;
+            }
+            let paymentScreenshot = '';
+            try {
+                const proofFile = document.getElementById('booking-payment-proof').files[0];
+                paymentScreenshot = await readPaymentProof(proofFile);
+            } catch (error) {
+                showToast(error.message || 'Screenshot upload failed.', 'error');
+                return;
+            }
+            const transactionId = document.getElementById('booking-transaction-id').value.trim();
+            const booking = {
+                id: 'b_' + Date.now(),
+                phoneId: phone.id,
+                model: phone.title,
+                price: getPhoneSellingPrice(phone),
+                customerName: document.getElementById('booking-customer-name').value.trim(),
+                customerPhone: document.getElementById('booking-customer-phone').value.trim(),
+                customerAddress: document.getElementById('booking-customer-address').value.trim(),
+                transactionId: transactionId,
+                paymentScreenshot: paymentScreenshot,
+                paymentProofStatus: (transactionId || paymentScreenshot) ? 'Submitted - verify manually' : 'Not submitted',
+                note: document.getElementById('booking-customer-note').value.trim(),
+                date: new Date().toLocaleString('en-IN'),
+                status: 'New'
+            };
+            booking.advanceAmount = 1000;
+            booking.balanceAtShop = Math.max(0, Number(phone.price) - 1000);
+            booking.status = 'Awaiting ₹1,000 advance payment';
+            if (!state.storeSettings.upi || !state.storeSettings.upi.includes('@')) {
+                showToast('Admin এখনো UPI ID সেট করেননি। পরে আবার চেষ্টা করুন অথবা দোকানে যোগাযোগ করুন।');
+                return;
+            }
+            state.bookings.unshift(booking);
+            saveState();
+            document.getElementById('booking-form').reset();
+            document.getElementById('booking-payment-proof-name').textContent = 'No photo selected';
+            document.getElementById('booking-payment-proof-preview').classList.add('hidden');
+            document.getElementById('booking-payment-proof-preview').removeAttribute('src');
+            closeBookingModal();
+            renderAdminView();
+            showToast('UPI app খুলবে। ₹1,000 পেমেন্ট করুন। Transaction ID বা Screenshot Booking-এ যোগ করুন। Admin টাকা যাচাই করে Confirm করবেন।');
+            const paymentUrl = `upi://pay?pa=${encodeURIComponent(state.storeSettings.upi)}&pn=${encodeURIComponent(state.storeSettings.name)}&am=1000&cu=INR&tn=${encodeURIComponent('Booking advance: ' + phone.title)}`;
+            window.location.href = paymentUrl;
+        }
+
+        function renderBookings() {
+            const list = document.getElementById('admin-bookings-list');
+            if (!list) return;
+            if (!state.bookings.length) {
+                list.innerHTML = '<p class="text-sm text-slate-500">No booking requests yet.</p>';
+                return;
+            }
+            list.innerHTML = state.bookings.map(booking => `
+                <div class="p-3 bg-white/80 rounded-xl border border-red-100 space-y-1">
+                    <div class="flex items-center justify-between gap-2">
+                        <strong class="text-sm text-slate-900">${booking.model}</strong>
+                        <span class="text-xs text-emerald-300">${booking.status}</span>
+                    </div>
+                    <p class="text-xs text-slate-700">${booking.customerName} • ${booking.customerPhone}</p>
+                    <p class="text-xs text-slate-600">Address: ${booking.customerAddress || 'Not provided'}</p>
+                    <p class="text-xs text-slate-600">Phone price: ₹${Number(booking.price).toLocaleString('en-IN')} • Advance: ₹${Number(booking.advanceAmount || 1000).toLocaleString('en-IN')} • Shop balance: ₹${Number(booking.balanceAtShop ?? Math.max(0, Number(booking.price)-1000)).toLocaleString('en-IN')}</p>
+                    <p class="text-xs text-slate-600">${booking.date}</p>
+                    <div class="mt-2 rounded-lg bg-red-50 border border-red-100 p-2">
+                        <p class="text-xs font-semibold text-slate-800">Payment proof: ${booking.paymentProofStatus || 'Not submitted'}</p>
+                        <p class="text-xs text-slate-700">UTR / Transaction ID: ${booking.transactionId || 'Not provided'}</p>
+                        ${booking.paymentScreenshot ? `<button type="button" onclick="viewPaymentScreenshot('${booking.id}')" class="text-xs font-bold text-red-700 underline">View payment screenshot</button>` : '<p class="text-xs text-slate-500">No screenshot attached</p>'}
+                    </div>
+                    ${booking.note ? `<p class="text-xs text-slate-600">${booking.note}</p>` : ''}
+                    <button onclick="deleteBooking('${booking.id}')" class="text-xs text-rose-400 underline">Delete request</button>
+                </div>
+            `).join('');
+        }
+
+        function viewPaymentScreenshot(bookingId) {
+            const booking = state.bookings.find(item => String(item.id) === String(bookingId));
+            if (!booking || !booking.paymentScreenshot) {
+                showToast('Payment screenshot পাওয়া যায়নি।', 'error');
+                return;
+            }
+            const image = document.getElementById('payment-screenshot-image');
+            image.src = booking.paymentScreenshot;
+            const viewer = document.getElementById('payment-screenshot-viewer');
+            viewer.classList.remove('hidden');
+            viewer.classList.add('flex');
+        }
+        function closePaymentScreenshot() {
+            const viewer = document.getElementById('payment-screenshot-viewer');
+            viewer.classList.add('hidden');
+            viewer.classList.remove('flex');
+            document.getElementById('payment-screenshot-image').removeAttribute('src');
+        }
+
+        function deleteBooking(id) {
+            if (!confirm('Delete this booking request?')) return;
+            state.bookings = state.bookings.filter(item => item.id !== id);
+            saveState();
+            renderBookings();
+        }
+
+        function orderViaWhatsApp(title, price) {
+            const text = encodeURIComponent(`Hello ${state.storeSettings.name}, ami ei phone-ti kinte chai:\nModel: ${title}\nPrice: ₹${price}`);
+            window.open(`https://wa.me/${state.storeSettings.phone}?text=${text}`, '_blank');
+        }
+
+        function openUpiModal(title, price) {
+            document.getElementById('upi-phone-title').innerText = `${title} - ₹${price.toLocaleString('en-IN')}`;
+            document.getElementById('upi-id-display').innerText = state.storeSettings.upi;
+            const upiUrl = `upi://pay?pa=${state.storeSettings.upi}&pn=${encodeURIComponent(state.storeSettings.name)}&am=${price}&cu=INR`;
+            document.getElementById('upi-qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+            document.getElementById('upi-modal').classList.remove('hidden');
+        }
+
+        function closeUpiModal() { document.getElementById('upi-modal').classList.add('hidden'); }
+
+        // Auth Handling
+        function openAuthModal() { adminAccess(); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('auth-id').value;
+            const role = 'customer';
+            const pwd = document.getElementById('auth-password').value;
+
+            state.currentUser = { name: id, role: role };
+            saveState();
+            renderHeader();
+            closeAuthModal();
+        }
+
+        function handleLogout() {
+            state.currentUser = null;
+            saveState();
+            renderHeader();
+            switchMainTab('storefront');
+        }
+
+        // Preserve the original store logo without resizing or recompressing.
+        function previewStoreLogo(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                showToast('একটি ছবি নির্বাচন করুন।', 'error');
+                event.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                pendingStoreLogo = reader.result;
+                document.getElementById('setting-logo-preview').src = pendingStoreLogo;
+            };
+            reader.onerror = () => showToast('ছবি পড়া যায়নি। আবার চেষ্টা করুন।', 'error');
+            reader.readAsDataURL(file);
+        }
+        let pendingStoreLogo = null;
+
+        // Settings Handling
+        function openStoreSettingsModal() {
+            document.getElementById('setting-store-name').value = state.storeSettings.name || 'SSN MOBILE GLAXY';
+            document.getElementById('setting-store-location').value = state.storeSettings.location || '';
+            document.getElementById('setting-store-phone').value = state.storeSettings.phone;
+            document.getElementById('setting-store-upi').value = state.storeSettings.upi || '';
+            pendingStoreLogo = null;
+            document.getElementById('setting-store-logo').value = '';
+            document.getElementById('setting-logo-preview').src = state.storeSettings.logo || document.getElementById('store-logo-img').src;
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
+
+        function handleSaveSettings(e) {
+            e.preventDefault();
+            state.storeSettings.name = document.getElementById('setting-store-name').value || 'SSN MOBILE GLAXY';
+            state.storeSettings.location = document.getElementById('setting-store-location').value.trim();
+            state.storeSettings.phone = document.getElementById('setting-store-phone').value.replace(/\\D/g, '');
+            state.storeSettings.upi = document.getElementById('setting-store-upi').value.trim();
+            if (pendingStoreLogo) state.storeSettings.logo = pendingStoreLogo;
+            const newAdminPin = document.getElementById('setting-new-admin-pin').value.trim();
+            if (newAdminPin) {
+                if (!/^\\d{4,12}$/.test(newAdminPin)) {
+                    showToast('Admin PIN ৪–১২ সংখ্যার হতে হবে।', 'error');
+                    return;
+                }
+                state.storeSettings.adminPin = newAdminPin;
+            }
+            document.getElementById('setting-new-admin-pin').value = '';
+            saveState();
+            renderHeader();
+            document.title = state.storeSettings.name || 'SSN MOBILE GLAXY';
+            closeSettingsModal();
+            showToast('Settings updated successfully!');
+        }
+    </script>
+
+
+    <div id="payment-screenshot-viewer" class="hidden fixed inset-0 z-[220] bg-black/95 items-center justify-center p-3" onclick="closePaymentScreenshot()">
+        <button type="button" aria-label="Close screenshot" class="absolute top-4 right-4 z-10 h-11 w-11 rounded-full bg-white/15 text-white text-2xl" onclick="event.stopPropagation();closePaymentScreenshot()">×</button>
+        <img id="payment-screenshot-image" alt="Payment screenshot" class="max-w-full max-h-full object-contain" style="width:auto;height:auto;" onclick="event.stopPropagation()">
+    </div>
+\n</body>
+</html>
